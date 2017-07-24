@@ -65,8 +65,17 @@
 			<div id="legend">
 				<span>not tracked</span>
 			
-				<span class="cov0">not covered</span>
-				<span class="cov8">covered</span>
+				<span class="cov0">no coverage</span>
+				<span class="cov1">low coverage</span>
+				<span class="cov2">*</span>
+				<span class="cov3">*</span>
+				<span class="cov4">*</span>
+				<span class="cov5">*</span>
+				<span class="cov6">*</span>
+				<span class="cov7">*</span>
+				<span class="cov8">*</span>
+				<span class="cov9">*</span>
+				<span class="cov10">high coverage</span>
 			
 			</div>
 		</div>
@@ -74,7 +83,7 @@
 		
 		<pre class="file" id="file0" style="display: none">package package1
 
-func Fizz() string <span class="cov8" title="1">{
+func Fizz() string <span class="cov10" title="34">{
         return "Fizz"
 }
 </pre>
@@ -85,12 +94,12 @@ import (
         "fmt"
 )
 
-func Buzz() string <span class="cov8" title="1">{
+func Buzz() string <span class="cov10" title="21">{
         return "Buzz"
 }
 </span>
 // not tested in package1
-func FizzBuzz() string <span class="cov8" title="1">{
+func FizzBuzz() string <span class="cov6" title="6">{
         return fmt.Sprintf("%s%s", Fizz(), Buzz())
 }
 </pre>
@@ -103,25 +112,25 @@ import (
         "github.com/AlekSi/gocovermerge/internal/test/package1"
 )
 
-func FizzBuzz() <span class="cov8" title="1">{
-        for i :=</span> 1; i &lt;= 100; i++ <span class="cov8" title="1">{
+func FizzBuzz() <span class="cov1" title="1">{
+        for i :=</span> 1; i &lt;= 100; i++ <span class="cov10" title="100">{
                 m3 := (i % 3) == 0
                 m5 := (i % 5) == 0
                 switch {
-</span>                case m3 &amp;&amp; m5:<span class="cov8" title="1">
+</span>                case m3 &amp;&amp; m5:<span class="cov4" title="6">
                         fmt.Println</span>(package1.FizzBuzz())
-                case m3:<span class="cov8" title="1">
+                case m3:<span class="cov7" title="27">
                         fmt.Println(p</span>ackage1.Fizz())
-                case m5:<span class="cov8" title="1">
+                case m5:<span class="cov6" title="14">
                         fmt.Println(pac</span>kage1.Buzz())
-                default:<span class="cov8" title="1">
+                default:<span class="cov8" title="53">
                         fmt.Println(i)
 </span>                }
         }
 }
 
 // not tested in package2
-func Foo() string <span class="cov8" title="1">{
+func Foo() string <span class="cov1" title="1">{
         return "Foo"
 }
 </pre>
