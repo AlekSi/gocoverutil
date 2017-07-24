@@ -82,7 +82,7 @@ func Merge(files []string, output string) error {
 		for _, b := range blocks[file] {
 			// encoding/base64/base64.go:34.44,37.40 3 1
 			// where the fields are: name.go:line.column,line.column numberOfStatements count
-			l := fmt.Sprintf("%s:%d.%d,%d.%d %d %d\n", file, b.StartLine, b.StartCol, b.EndLine, b.EndLine, b.NumStmt, b.Count)
+			l := fmt.Sprintf("%s:%d.%d,%d.%d %d %d\n", file, b.StartLine, b.StartCol, b.EndLine, b.EndCol, b.NumStmt, b.Count)
 			if _, err = f.WriteString(l); err != nil {
 				return err
 			}

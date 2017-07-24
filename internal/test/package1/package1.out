@@ -1,4 +1,4 @@
 mode: count
-github.com/AlekSi/gocovermerge/internal/test/package1/file1.go:3.20,5.2 1 1
 github.com/AlekSi/gocovermerge/internal/test/package1/file2.go:7.20,9.2 1 1
 github.com/AlekSi/gocovermerge/internal/test/package1/file2.go:12.24,14.2 1 0
+github.com/AlekSi/gocovermerge/internal/test/package1/file1.go:3.20,5.2 1 1
