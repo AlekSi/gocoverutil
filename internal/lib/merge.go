@@ -28,6 +28,7 @@ func Merge(files []string, output string) error {
 		}
 	}
 
+	// sort files
 	files = make([]string, 0, len(blocks))
 	for file := range blocks {
 		files = append(files, file)
@@ -44,7 +45,32 @@ func Merge(files []string, output string) error {
 		return err
 	}
 	for _, file := range files {
+		// sort blocks
+		sort.Slice(blocks[file], func(i, j int) bool {
+			left, right := blocks[file][i], blocks[file][j]
+			if left.StartLine != right.StartLine {
+				return left.StartLine < right.StartLine
+			}
+			if left.StartCol != right.StartCol {
+				return left.StartCol < right.StartCol
+			}
+			if left.EndLine != right.EndLine {
+				return left.EndLine < right.EndLine
+			}
+			if left.EndCol != right.EndCol {
+				return left.EndCol < right.EndCol
+			}
+			return false
+		})
+
+		var prev cover.ProfileBlock
 		for _, b := range blocks[file] {
+			if prev == b {
+				// FIXME increment count instead in count and atomic mode
+				continue
+			}
+			prev = b
+
 			// encoding/base64/base64.go:34.44,37.40 3 1
 			// where the fields are: name.go:line.column,line.column numberOfStatements count
 			l := fmt.Sprintf("%s:%d.%d,%d.%d %d %d\n", file, b.StartLine, b.StartCol, b.EndLine, b.EndLine, b.NumStmt, b.Count)
