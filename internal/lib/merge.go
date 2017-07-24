@@ -54,13 +54,28 @@ func Merge(files []string, output string) error {
 			return false
 		})
 
-		// cut duplicate blocks
+		// merge blocks
 		var newBlocks []cover.ProfileBlock
 		var prev cover.ProfileBlock
 		for _, b := range blocks[file] {
-			if prev != b {
-				newBlocks = append(newBlocks, b)
+			// skip full duplicate
+			if prev == b {
+				continue
 			}
+
+			// change count inside previous block if only count changed
+			prev.Count = b.Count
+			if prev == b {
+				if mode == "set" {
+					newBlocks[len(newBlocks)-1].Count = 1
+				} else {
+					newBlocks[len(newBlocks)-1].Count += b.Count
+				}
+				prev = b
+				continue
+			}
+
+			newBlocks = append(newBlocks, b)
 			prev = b
 		}
 		blocks[file] = newBlocks

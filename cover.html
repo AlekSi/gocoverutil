@@ -54,17 +54,11 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">github.com/AlekSi/gocovermerge/internal/lib/merge.go (0.0%)</option>
+				<option value="file0">github.com/AlekSi/gocovermerge/internal/test/package1/file1.go (100.0%)</option>
 				
-				<option value="file1">github.com/AlekSi/gocovermerge/internal/lib/test.go (0.0%)</option>
+				<option value="file1">github.com/AlekSi/gocovermerge/internal/test/package1/file2.go (100.0%)</option>
 				
-				<option value="file2">github.com/AlekSi/gocovermerge/internal/test/package1/file1.go (100.0%)</option>
-				
-				<option value="file3">github.com/AlekSi/gocovermerge/internal/test/package1/file2.go (100.0%)</option>
-				
-				<option value="file4">github.com/AlekSi/gocovermerge/internal/test/package2/file1.go (100.0%)</option>
-				
-				<option value="file5">github.com/AlekSi/gocovermerge/main.go (0.0%)</option>
+				<option value="file2">github.com/AlekSi/gocovermerge/internal/test/package2/file1.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -78,194 +72,14 @@
 		</div>
 		<div id="content">
 		
-		<pre class="file" id="file0" style="display: none">package lib
-
-import (
-        "fmt"
-        "os"
-        "sort"
-
-        "golang.org/x/tools/cover"
-)
-
-func Merge(files []string, output string) error <span class="cov0" title="0">{
-        blocks := make(map[string][]cover.ProfileBlock)
-        var mode string
-        for _, f := </span>range files <span class="cov0" title="0">{
-                profiles, err := cover.ParseProfiles(f)
-                if err != nil</span> <span class="cov0" title="0">{
-                        return err
-                }
-</span>                <span class="cov0" title="0">for _, p := rang</span>e profiles <span class="cov0" title="0">{
-                        if mode == "" {
-</span>                                mode = p.Mode
-                        }
-</span>                        <span class="cov0" title="0">if mode != p.Mode {</span>
-                                return fmt.Errorf("different modes: %s and %s", mode, p.Mode)
-                        }
-</span>
-                        <span class="cov0" title="0">blocks[p.FileName] = ap</span>pend(blocks[p.FileName], p.Blocks...)
-                }
-        }
-
-        // sort files
-        <span class="cov0" title="0">files = make([]string, 0, len(blocks))
-        for file := range blocks {
-</span>                files = append(files, file)
-        }
-</span>        <span class="cov0" title="0">sort.Strings(files)
-
-        for _, file := range files {
-</span>                // sort blocks
-                sort.Slice(blocks[file], func(i, j in</span>t) bool <span class="cov0" title="0">{
-                        left, right := blocks[file][i], blocks[file][j]
-                        if left.StartLine != right.StartLine {</span>
-                                return left.StartLine &lt; right.StartLine
-                        }
-</span>                        <span class="cov0" title="0">if left.StartCol != right.StartCol {
-</span>                                return left.StartCol &lt; right.StartCol
-                        }
-</span>                        <span class="cov0" title="0">if left.EndLine != right.EndLine {
-</span>                                return left.EndLine &lt; right.EndLine
-                        }
-</span>                        <span class="cov0" title="0">if left.EndCol != right.EndCol {
-</span>                                return left.EndCol &lt; right.EndCol
-                        }
-</span>                        <span class="cov0" title="0">return false
-</span>                })
-
-                // cut duplicate blocks
-                <span class="cov0" title="0">var newBlocks []cover.ProfileBlock
-                var prev cover.ProfileBlock
-                for _, b := range blocks[file] {
-</span>                        if prev != b {
-</span>                                newBlocks = append(newBlocks, b)
-                        }
-</span>                        <span class="cov0" title="0">prev = b
-</span>                }
-                <span class="cov0" title="0">blocks[file] = newBlocks
-</span>        }
-
-        <span class="cov0" title="0">f, err := os.Create(output)
-        if err != nil {
-</span>                return err
-        }
-</span>        <span class="cov0" title="0">defer f.Close()
-
-        if _, err = f.WriteString(fmt.Sprintf("mode: %s\n", mode)); err != nil {
-</span>                return err
-        }
-</span>        <span class="cov0" title="0">for _, file := range files {
-</span>                for _, b := range blocks[file] {
-</span>                        // encoding/base64/base64.go:34.44,37.40 3 1
-                        // where the fields are: name.go:line.column,line.column numberOfStatements count
-                        l := fmt.Sprintf("%s:%d.%d,%d.%d %d %d\n", file, b.StartLine, b.StartCol, b.EndLine, b.EndLine, b.NumStmt, b.Count)
-                        if _, err = f.WriteString(l); err != nil {
-</span>                                return err
-                        }
-</span>                }
-        }
-        <span class="cov0" title="0">return nil
-</span>}
-</pre>
-		
-		<pre class="file" id="file1" style="display: none">package lib
-
-import (
-        "flag"
-        "fmt"
-        "io/ioutil"
-        "log"
-        "os"
-        "os/exec"
-        "path/filepath"
-        "strings"
-)
-
-func list(packages []string) ([]string, error) <span class="cov0" title="0">{
-        args := append([]string{"list"}, packages...)
-        cmd := exec.Command("go", args...)
-        cmd.Stderr = os.Stderr
-        b, err := cmd.Output()
-        if err != nil {
-</span>                return nil, err
-        }
-</span>
-        <span class="cov0" title="0">var res []string
-        lines := strings.Split(string(b), "\n")
-        for _, l := range lines</span> <span class="cov0" title="0">{
-                l = strings.TrimSpace(l)
-                if l != "" {
-</span>                        res = append(res, l)
-                }
-</span>        }
-        <span class="cov0" title="0">return res, nil
-</span>}
-
-func Test(flagSet *flag.FlagSet, output string) error <span class="cov0" title="0">{
-        packages, err := list(flagSet.Args())
-        if err != nil {
-</span>                return err
-        }
-</span>
-        <span class="cov0" title="0">var flags []string
-        flagSet.Visit(func(f *flag.Flag) {
-</span>                flags = append(flags, fmt.Sprintf("-%s=%s", f.Name, f.Value.String()))
-        })
-</span>        <span class="cov0" title="0">flags = append(flags, fmt.Sprintf("-coverpkg=%s", strings.Join(packages, ",")))
-
-        f, err := ioutil.TempFile("", "gocovermerge-")
-        if err != nil {
-</span>                return err
-        }
-</span>        <span class="cov0" title="0">if err = f.Close(); err != nil {
-</span>                return err
-        }
-</span>        <span class="cov0" title="0">dir := f.Name()
-        if err = os.Remove(dir); err != nil {
-</span>                return err
-        }
-</span>        <span class="cov0" title="0">if err = os.Mkdir(dir, 0777); err != nil {
-</span>                return err
-        }
-</span>
-        <span class="cov0" title="0">files := make([]string, 0, len(packages))
-        for _, p := range packages {
-</span>                if f, err = ioutil.TempFile(dir, filepath.Base(p)+"-"); err </span>!= nil <span class="cov0" title="0">{
-                        return err
-                }
-</span>                <span class="cov0" title="0">files = append(files, f.Name())
-                if err = f.Close(); err != nil {
-</span>                        return err
-                }
-</span>
-                <span class="cov0" title="0">args := append([]string{"test"}, flags...)
-                args = append(args, fmt.Sprintf("-coverprofile=%s", f.Name()))
-                args = append(args, p)
-                cmd := exec.Command("go", args...)
-                cmd.Stdout = os.Stdout
-                cmd.Stderr = os.Stderr
-                log.Printf(strings.Join(cmd.Args, " "))
-                if err := cmd.Run(); err != nil {
-</span>                        return err
-                }
-</span>        }
-
-        <span class="cov0" title="0">if err = Merge(files, output); err != nil {
-</span>                return err
-        }
-</span>        <span class="cov0" title="0">return os.RemoveAll(dir)
-</span>}
-</pre>
-		
-		<pre class="file" id="file2" style="display: none">package package1
+		<pre class="file" id="file0" style="display: none">package package1
 
 func Fizz() string <span class="cov8" title="1">{
         return "Fizz"
 }
 </pre>
 		
-		<pre class="file" id="file3" style="display: none">package package1
+		<pre class="file" id="file1" style="display: none">package package1
 
 import (
         "fmt"
@@ -281,7 +95,7 @@ func FizzBuzz() string <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file4" style="display: none">package package2
+		<pre class="file" id="file2" style="display: none">package package2
 
 import (
         "fmt"
@@ -309,78 +123,6 @@ func FizzBuzz() <span class="cov8" title="1">{
 // not tested in package2
 func Foo() string <span class="cov8" title="1">{
         return "Foo"
-}
-</pre>
-		
-		<pre class="file" id="file5" style="display: none">package main
-
-import (
-        "flag"
-        "fmt"
-        "log"
-        "os"
-        "os/exec"
-        "syscall"
-
-        "github.com/AlekSi/gocovermerge/internal/lib"
-)
-
-var (
-        coverprofileF = flag.String("coverprofile", "cover.out", "Output file.")
-
-        testFlagSet = flag.NewFlagSet("test", flag.ExitOnError)
-
-        // The build flags are shared by the build, clean, get, install, list, run, and test commands:
-        aF    = testFlagSet.Bool("a", false, "force rebuilding of packages that are already up-to-date.")
-        nF    = testFlagSet.Bool("n", false, "print the commands but do not run them.")
-        raceF = testFlagSet.Bool("race", false, "enable data race detection.")
-        msanF = testFlagSet.Bool("msan", false, "enable interoperation with memory sanitizer.")
-        workF = testFlagSet.Bool("work", false, "print the name of the temporary work directory and do not delete it when exiting.")
-        xF    = testFlagSet.Bool("x", false, "print the commands.")
-        tagsF = testFlagSet.String("tags", "", "a list of build tags to consider satisfied during the build.")
-        // -p is not supported
-        // -v is redefined below
-
-        // The test binary flags:
-        covermodeF = testFlagSet.String("covermode", "", "set the mode for coverage analysis for the package[s] being tested.")
-        shortF     = testFlagSet.Bool("short", false, "tell long-running tests to shorten their run time.")
-        timeoutF   = testFlagSet.Duration("timeout", 0, "if a test runs longer than t, panic.")
-        vF         = testFlagSet.Bool("v", false, "verbose output: log all tests as they are run.")
-
-        // TODO add more flags
-)
-
-func main() <span class="cov0" title="0">{
-        log.SetFlags(0)
-        flag.Usage = func() {
-</span>                fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
-                flag.PrintDefaults()
-        }
-</span>        <span class="cov0" title="0">flag.Parse()
-
-        var err error
-        switch flag.Arg(0) {
-</span>        case "merge":<span class="cov0" title="0">
-                err = lib.Merge(flag.Args()[1:], *coverprofileF</span>)
-
-        case "test":<span class="cov0" title="0">
-                testFlagSet.Parse(flag.Args()[1:])
-                err = lib.Test(testFlagSet, *coverprofileF)
-</span>
-        default:<span class="cov0" title="0">
-                flag.Usage()
-                log.Fatalf("Unexpected command %q.", flag.Arg(0))
-</span>        }
-
-        <span class="cov0" title="0">if err != nil {
-</span>                log.Print(err)
-                if eErr, ok := err.(*exec.ExitError); ok {
-</span>                        if ws, ok := eErr.Sys().(*syscall.WaitStatus); ok {
-</span>                                os.Exit(ws.ExitStatus())
-                        }
-</span>                }
-                <span class="cov0" title="0">os.Exit(1)
-</span>        }
 }
 </pre>
 		

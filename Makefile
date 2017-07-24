@@ -5,5 +5,5 @@ all:
 	gocovermerge test -v \
 		github.com/AlekSi/gocovermerge/internal/test/package1 \
 		github.com/AlekSi/gocovermerge/internal/test/package2 \
-		github.com/AlekSi/gocovermerge/...
+		github.com/AlekSi/gocovermerge/internal/test/...
 	go tool cover -html=cover.out -o cover.html
