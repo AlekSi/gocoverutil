@@ -38,20 +38,8 @@ func Merge(files []string, output string) error {
 	for _, file := range files {
 		// sort blocks
 		sort.Slice(blocks[file], func(i, j int) bool {
-			left, right := blocks[file][i], blocks[file][j]
-			if left.StartLine != right.StartLine {
-				return left.StartLine < right.StartLine
-			}
-			if left.StartCol != right.StartCol {
-				return left.StartCol < right.StartCol
-			}
-			if left.EndLine != right.EndLine {
-				return left.EndLine < right.EndLine
-			}
-			if left.EndCol != right.EndCol {
-				return left.EndCol < right.EndCol
-			}
-			return false
+			bi, bj := blocks[file][i], blocks[file][j]
+			return bi.StartLine < bj.StartLine || bi.StartLine == bj.StartLine && bi.StartCol < bj.StartCol
 		})
 
 		// merge blocks
