@@ -35,15 +35,6 @@ func Merge(files []string, output string) error {
 	}
 	sort.Strings(files)
 
-	f, err := os.Create(output)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-
-	if _, err = f.WriteString(fmt.Sprintf("mode: %s\n", mode)); err != nil {
-		return err
-	}
 	for _, file := range files {
 		// sort blocks
 		sort.Slice(blocks[file], func(i, j int) bool {
@@ -63,14 +54,29 @@ func Merge(files []string, output string) error {
 			return false
 		})
 
+		// cut duplicate blocks
+		var newBlocks []cover.ProfileBlock
 		var prev cover.ProfileBlock
 		for _, b := range blocks[file] {
-			if prev == b {
-				// FIXME increment count instead in count and atomic mode
-				continue
+			if prev != b {
+				newBlocks = append(newBlocks, b)
 			}
 			prev = b
+		}
+		blocks[file] = newBlocks
+	}
 
+	f, err := os.Create(output)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	if _, err = f.WriteString(fmt.Sprintf("mode: %s\n", mode)); err != nil {
+		return err
+	}
+	for _, file := range files {
+		for _, b := range blocks[file] {
 			// encoding/base64/base64.go:34.44,37.40 3 1
 			// where the fields are: name.go:line.column,line.column numberOfStatements count
 			l := fmt.Sprintf("%s:%d.%d,%d.%d %d %d\n", file, b.StartLine, b.StartCol, b.EndLine, b.EndLine, b.NumStmt, b.Count)

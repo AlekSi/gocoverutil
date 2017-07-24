@@ -115,21 +115,12 @@ func Merge(files []string, output string) error <span class="cov0" title="0">{
         }
 </span>        <span class="cov0" title="0">sort.Strings(files)
 
-        f, err := os.Create(output)
-        if err != nil {
-</span>                return err
-        }
-</span>        <span class="cov0" title="0">defer f.Close()
-
-        if _, err = f.WriteString(fmt.Sprintf("mod</span>e: %s\n", mode)); err != nil <span class="cov0" title="0">{
-                return err
-        }
-</span>        <span class="cov0" title="0">for _, file := range files {
+        for _, file := range files {
 </span>                // sort blocks
-                sort.Slice(blocks[file], func(i, j int) bool {</span>
+                sort.Slice(blocks[file], func(i, j in</span>t) bool <span class="cov0" title="0">{
                         left, right := blocks[file][i], blocks[file][j]
-                        if left.StartLine != right.StartLine {
-</span>                                return left.StartLine &lt; right.StartLine
+                        if left.StartLine != right.StartLine {</span>
+                                return left.StartLine &lt; right.StartLine
                         }
 </span>                        <span class="cov0" title="0">if left.StartCol != right.StartCol {
 </span>                                return left.StartCol &lt; right.StartCol
@@ -143,15 +134,30 @@ func Merge(files []string, output string) error <span class="cov0" title="0">{
 </span>                        <span class="cov0" title="0">return false
 </span>                })
 
-                <span class="cov0" title="0">var prev cover.ProfileBlock
+                // cut duplicate blocks
+                <span class="cov0" title="0">var newBlocks []cover.ProfileBlock
+                var prev cover.ProfileBlock
                 for _, b := range blocks[file] {
-</span>                        if prev == b {
-</span>                                // FIXME increment count instead in count and atomic mode
-                                continue
-</span>                        }
-                        <span class="cov0" title="0">prev = b
+</span>                        if prev != b {
+</span>                                newBlocks = append(newBlocks, b)
+                        }
+</span>                        <span class="cov0" title="0">prev = b
+</span>                }
+                <span class="cov0" title="0">blocks[file] = newBlocks
+</span>        }
 
-                        // encoding/base64/base64.go:34.44,37.40 3 1
+        <span class="cov0" title="0">f, err := os.Create(output)
+        if err != nil {
+</span>                return err
+        }
+</span>        <span class="cov0" title="0">defer f.Close()
+
+        if _, err = f.WriteString(fmt.Sprintf("mode: %s\n", mode)); err != nil {
+</span>                return err
+        }
+</span>        <span class="cov0" title="0">for _, file := range files {
+</span>                for _, b := range blocks[file] {
+</span>                        // encoding/base64/base64.go:34.44,37.40 3 1
                         // where the fields are: name.go:line.column,line.column numberOfStatements count
                         l := fmt.Sprintf("%s:%d.%d,%d.%d %d %d\n", file, b.StartLine, b.StartCol, b.EndLine, b.EndLine, b.NumStmt, b.Count)
                         if _, err = f.WriteString(l); err != nil {
