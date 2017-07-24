@@ -1,8 +1,8 @@
-mode: set
+mode: count
 github.com/AlekSi/gocovermerge/internal/test/package2/file1.go:9.17,10.28 1 1
-github.com/AlekSi/gocovermerge/internal/test/package2/file1.go:10.28,13.10 3 1
-github.com/AlekSi/gocovermerge/internal/test/package2/file1.go:14.17,15.36 1 1
-github.com/AlekSi/gocovermerge/internal/test/package2/file1.go:16.11,17.32 1 1
-github.com/AlekSi/gocovermerge/internal/test/package2/file1.go:18.11,19.32 1 1
-github.com/AlekSi/gocovermerge/internal/test/package2/file1.go:20.11,21.18 1 1
+github.com/AlekSi/gocovermerge/internal/test/package2/file1.go:10.28,13.10 3 100
+github.com/AlekSi/gocovermerge/internal/test/package2/file1.go:14.17,15.36 1 6
+github.com/AlekSi/gocovermerge/internal/test/package2/file1.go:16.11,17.32 1 27
+github.com/AlekSi/gocovermerge/internal/test/package2/file1.go:18.11,19.32 1 14
+github.com/AlekSi/gocovermerge/internal/test/package2/file1.go:20.11,21.18 1 53
 github.com/AlekSi/gocovermerge/internal/test/package2/file1.go:27.19,29.2 1 0
