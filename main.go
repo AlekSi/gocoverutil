@@ -44,19 +44,24 @@ var (
 func main() {
 	log.SetFlags(0)
 	mergeFlagSet.Usage = func() {
-		fmt.Fprintf(os.Stderr, "%s merge command merges several go coverage profiles into single file.\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "%s merge command merges several go coverage profiles into a single file.\n\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "Usage:\n\n")
 		fmt.Fprintf(os.Stderr, "  %s [global flags] merge [files]\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Example:\n\n")
+		fmt.Fprintf(os.Stderr, "  %s -coverprofile=cover.out merge internal/test/package1/package1.out internal/test/package2/package2.out\n\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "Global flags:\n")
 		flag.PrintDefaults()
 	}
 	testFlagSet.Usage = func() {
 		fmt.Fprintf(os.Stderr, "%s test command runs go test -cover with correct flags and merges profiles.\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Packages list is passed as arguments; they may contain `...` patterns.\n")
+		fmt.Fprintf(os.Stderr, "The list is expanded, sorted and duplicates are removed.\n")
+		fmt.Fprintf(os.Stderr, "`go test -coverpkg` flag is set automatically to include all packages.\n")
+		fmt.Fprintf(os.Stderr, "If tests are failing, %s exits with a correct exit code.\n\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "Usage:\n\n")
 		fmt.Fprintf(os.Stderr, "  %s [global flags] test [test flags] [packages]\n\n", os.Args[0])
-		fmt.Fprintf(os.Stderr, "Packages list may contain '...' patterns. The list is expanded, sorted and duplicates are removed.\n")
-		fmt.Fprintf(os.Stderr, "go test -coverpkg flag is set automatically to include all packages.\n")
-		fmt.Fprintf(os.Stderr, "If tests are failing, %s exits with correct exit code.\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Example:\n\n")
+		fmt.Fprintf(os.Stderr, "  %s -coverprofile=cover.out test -v -covermode=count github.com/AlekSi/gocovermerge/internal/test/...\n\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "Global flags:\n")
 		flag.PrintDefaults()
 		fmt.Fprintf(os.Stderr, "\nTest flags:\n")
@@ -64,10 +69,10 @@ func main() {
 	}
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "%s contains two commands: merge and test.\n\n", os.Args[0])
-		fmt.Fprintf(os.Stderr, "Merge command merges several go coverage profiles into single file.\n")
-		fmt.Fprintf(os.Stderr, "Run '%s merge -h' for usage information.\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Merge command merges several go coverage profiles into a single file.\n")
+		fmt.Fprintf(os.Stderr, "Run `%s merge -h` for usage information.\n\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "Test command runs go test -cover with correct flags and merges profiles.\n")
-		fmt.Fprintf(os.Stderr, "Run '%s test -h' for usage information.\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Run `%s test -h` for usage information.\n", os.Args[0])
 	}
 	flag.Parse()
 

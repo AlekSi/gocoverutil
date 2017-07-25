@@ -11,8 +11,18 @@ go get -u github.com/AlekSi/gocovermerge
 
 gocovermerge contains two commands: merge and test.
 
-Merge command merges several go coverage profiles into single file.
-Run `gocovermerge merge -h` for usage information.
+Merge command merges several go coverage profiles into a single file.
+Run `gocovermerge merge -h` for usage information. Example:
+```
+gocovermerge -coverprofile=cover.out merge internal/test/package1/package1.out internal/test/package2/package2.out
+```
 
-Test command runs go test -cover with correct flags and merges profiles.
-Run `gocovermerge test -h` for usage information.
+Test command runs `go test -cover` with correct flags and merges profiles.
+Packages list is passed as arguments; they may contain `...` patterns.
+The list is expanded, sorted and duplicates are removed.
+`go test -coverpkg` flag is set automatically to include all packages.
+If tests are failing, gocovermerge exits with a correct exit code.
+Run `gocovermerge test -h` for usage information. Example:
+```
+gocovermerge -coverprofile=cover.out test -v -covermode=count github.com/AlekSi/gocovermerge/internal/test/...
+```
