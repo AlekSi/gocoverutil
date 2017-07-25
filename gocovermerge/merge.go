@@ -1,4 +1,4 @@
-package lib
+package gocovermerge
 
 import (
 	"fmt"
@@ -8,6 +8,7 @@ import (
 	"golang.org/x/tools/cover"
 )
 
+// Merge combines several coverage files into single file.
 func Merge(files []string, output string) error {
 	blocks := make(map[string][]cover.ProfileBlock)
 	var mode string

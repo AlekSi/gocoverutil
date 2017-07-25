@@ -8,7 +8,7 @@ import (
 	"os/exec"
 	"syscall"
 
-	"github.com/AlekSi/gocovermerge/internal/lib"
+	"github.com/AlekSi/gocovermerge/gocovermerge"
 )
 
 var (
@@ -32,6 +32,8 @@ var (
 	shortF     = testFlagSet.Bool("short", false, "tell long-running tests to shorten their run time.")
 	timeoutF   = testFlagSet.Duration("timeout", 0, "if a test runs longer than t, panic.")
 	vF         = testFlagSet.Bool("v", false, "verbose output: log all tests as they are run.")
+	// -coverprofile is defined by main comand
+	// -coverpkg is set by Test method
 
 	// TODO add more flags
 )
@@ -47,11 +49,11 @@ func main() {
 	var err error
 	switch flag.Arg(0) {
 	case "merge":
-		err = lib.Merge(flag.Args()[1:], *coverprofileF)
+		err = gocovermerge.Merge(flag.Args()[1:], *coverprofileF)
 
 	case "test":
 		testFlagSet.Parse(flag.Args()[1:])
-		err = lib.Test(testFlagSet, *coverprofileF)
+		err = gocovermerge.Test(testFlagSet, *coverprofileF)
 
 	default:
 		flag.Usage()
