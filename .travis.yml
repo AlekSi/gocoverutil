@@ -7,6 +7,8 @@ go:
 
 install:
   - go get ./...
+  - go get github.com/mattn/goveralls
 
 after_success:
   - bash <(curl -s https://codecov.io/bash) -X fix
+  - goveralls -coverprofile=cover.out
