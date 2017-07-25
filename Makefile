@@ -1,5 +1,9 @@
-all:
+all: test
+
+install:
 	go install -v ./...
+
+test: install
 	cd internal/test/package1 && go test -coverprofile=package1.out -covermode=count
 	cd internal/test/package2 && go test -coverprofile=package2.out -covermode=count
 	gocovermerge test -v -covermode=count \

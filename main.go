@@ -14,6 +14,8 @@ import (
 var (
 	coverprofileF = flag.String("coverprofile", "cover.out", "Output file.")
 
+	mergeFlagSet = flag.NewFlagSet("merge", flag.ExitOnError)
+
 	testFlagSet = flag.NewFlagSet("test", flag.ExitOnError)
 
 	// The build flags are shared by the build, clean, get, install, list, run, and test commands:
@@ -40,16 +42,39 @@ var (
 
 func main() {
 	log.SetFlags(0)
-	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
+	mergeFlagSet.Usage = func() {
+		fmt.Fprintf(os.Stderr, "%s merge command merges several go coverage profiles into single file.\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage:\n\n")
+		fmt.Fprintf(os.Stderr, "  %s [global flags] merge [files]\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Global flags:\n")
 		flag.PrintDefaults()
+	}
+	testFlagSet.Usage = func() {
+		fmt.Fprintf(os.Stderr, "%s test command runs go test -cover with correct flags and merges profiles.\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage:\n\n")
+		fmt.Fprintf(os.Stderr, "  %s [global flags] test [test flags] [packages]\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Packages list may contain '...' patterns. The list is expanded, sorted and duplicates are removed.\n")
+		fmt.Fprintf(os.Stderr, "go test -coverpkg flag is set automatically to include all packages.\n")
+		fmt.Fprintf(os.Stderr, "If tests are failing, %s exits with correct exit code.\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Global flags:\n")
+		flag.PrintDefaults()
+		fmt.Fprintf(os.Stderr, "\nTest flags:\n")
+		testFlagSet.PrintDefaults()
+	}
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "%s contains two commands: merge and test.\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Merge command merges several go coverage profiles into single file.\n")
+		fmt.Fprintf(os.Stderr, "Run '%s merge -h' for usage information.\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Test command runs go test -cover with correct flags and merges profiles.\n")
+		fmt.Fprintf(os.Stderr, "Run '%s test -h' for usage information.\n", os.Args[0])
 	}
 	flag.Parse()
 
 	var err error
 	switch flag.Arg(0) {
 	case "merge":
-		err = gocovermerge.Merge(flag.Args()[1:], *coverprofileF)
+		mergeFlagSet.Parse(flag.Args()[1:])
+		err = gocovermerge.Merge(mergeFlagSet.Args(), *coverprofileF)
 
 	case "test":
 		testFlagSet.Parse(flag.Args()[1:])
@@ -57,7 +82,7 @@ func main() {
 
 	default:
 		flag.Usage()
-		log.Fatalf("Unexpected command %q.", flag.Arg(0))
+		log.Fatalf("\nUnexpected command '%s'.", flag.Arg(0))
 	}
 
 	if err != nil {
