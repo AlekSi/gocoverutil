@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -78,7 +79,11 @@ func main() {
 
 	case "test":
 		testFlagSet.Parse(flag.Args()[1:])
-		err = gocovermerge.Test(testFlagSet, *coverprofileF)
+		logger := log.New(ioutil.Discard, "", 0)
+		if *nF || *xF || *vF {
+			logger.SetOutput(os.Stderr)
+		}
+		err = gocovermerge.Test(testFlagSet, *coverprofileF, logger)
 
 	default:
 		flag.Usage()

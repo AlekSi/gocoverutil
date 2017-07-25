@@ -122,7 +122,7 @@ func list(packages []string) ([]string, error) {
 
 // Test runs `go test -cover` with correct flags for all packages in flagSet, and merges coverage files.
 // Returned error may be *exec.ExitError if tests failed.
-func Test(flagSet *flag.FlagSet, output string) error {
+func Test(flagSet *flag.FlagSet, output string, logger *log.Logger) error {
 	packages, err := list(flagSet.Args())
 	if err != nil {
 		return err
@@ -152,7 +152,6 @@ func Test(flagSet *flag.FlagSet, output string) error {
 	}
 
 	files := make([]string, 0, len(packages))
-	logger := log.New(os.Stderr, "", 0)
 	for _, p := range packages {
 		// get temporary file name
 		if f, err = ioutil.TempFile(dir, filepath.Base(p)+"-"); err != nil {
