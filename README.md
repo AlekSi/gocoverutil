@@ -1,9 +1,12 @@
 # gocovermerge
 
+[![Release](https://github-release-version.herokuapp.com/github/AlekSi/gocovermerge/release.svg?style=flat)](https://github.com/AlekSi/gocovermerge/releases/latest)
 [![Travis CI](https://travis-ci.org/AlekSi/gocovermerge.svg?branch=master)](https://travis-ci.org/AlekSi/gocovermerge)
 [![AppVeyor](https://ci.appveyor.com/api/projects/status/bxcbywwapyvsprju/branch/master?svg=true)](https://ci.appveyor.com/project/AlekSi/gocovermerge)
 [![Codecov](https://codecov.io/gh/AlekSi/gocovermerge/branch/master/graph/badge.svg)](https://codecov.io/gh/AlekSi/gocovermerge)
 [![Coveralls](https://coveralls.io/repos/github/AlekSi/gocovermerge/badge.svg?branch=master)](https://coveralls.io/github/AlekSi/gocovermerge)
+[![Go Report Card](https://goreportcard.com/badge/AlekSi/gocovermerge)](https://goreportcard.com/report/AlekSi/gocovermerge)
+
 
 Install it with `go get`:
 ```
