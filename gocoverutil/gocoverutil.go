@@ -1,5 +1,5 @@
-// Package gocovermerge implements merging of go cover profiles and running go test -cover with correct flags.
-package gocovermerge
+// Package gocoverutil implements merging of go cover profiles and running go test -cover with correct flags.
+package gocoverutil
 
 import (
 	"flag"
@@ -136,7 +136,7 @@ func Test(flagSet *flag.FlagSet, output string, logger *log.Logger) error {
 	flags = append(flags, fmt.Sprintf("-coverpkg=%s", strings.Join(packages, ",")))
 
 	// create temporary directory
-	f, err := ioutil.TempFile("", "gocovermerge-")
+	f, err := ioutil.TempFile("", "gocoverutil-")
 	if err != nil {
 		return err
 	}

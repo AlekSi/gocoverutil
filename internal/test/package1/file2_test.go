@@ -3,8 +3,8 @@ package package1_test
 import (
 	"testing"
 
-	. "github.com/AlekSi/gocovermerge/internal/test/package1"
-	"github.com/AlekSi/gocovermerge/internal/test/package2"
+	. "github.com/AlekSi/gocoverutil/internal/test/package1"
+	"github.com/AlekSi/gocoverutil/internal/test/package2"
 )
 
 func TestBuzz(t *testing.T) {

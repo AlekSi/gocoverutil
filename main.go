@@ -9,7 +9,7 @@ import (
 	"os/exec"
 	"syscall"
 
-	"github.com/AlekSi/gocovermerge/gocovermerge"
+	"github.com/AlekSi/gocoverutil/gocoverutil"
 )
 
 var (
@@ -61,7 +61,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Usage:\n\n")
 		fmt.Fprintf(os.Stderr, "  %s [global flags] test [test flags] [packages]\n\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "Example:\n\n")
-		fmt.Fprintf(os.Stderr, "  %s -coverprofile=cover.out test -v -covermode=count github.com/AlekSi/gocovermerge/internal/test/...\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "  %s -coverprofile=cover.out test -v -covermode=count github.com/AlekSi/gocoverutil/internal/test/...\n\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "Global flags:\n")
 		flag.PrintDefaults()
 		fmt.Fprintf(os.Stderr, "\nTest flags:\n")
@@ -80,7 +80,7 @@ func main() {
 	switch flag.Arg(0) {
 	case "merge":
 		mergeFlagSet.Parse(flag.Args()[1:])
-		err = gocovermerge.Merge(mergeFlagSet.Args(), *coverprofileF)
+		err = gocoverutil.Merge(mergeFlagSet.Args(), *coverprofileF)
 
 	case "test":
 		testFlagSet.Parse(flag.Args()[1:])
@@ -88,7 +88,7 @@ func main() {
 		if *nF || *xF || *vF {
 			logger.SetOutput(os.Stderr)
 		}
-		err = gocovermerge.Test(testFlagSet, *coverprofileF, logger)
+		err = gocoverutil.Test(testFlagSet, *coverprofileF, logger)
 
 	default:
 		flag.Usage()

@@ -3,7 +3,7 @@ package package2
 import (
 	"fmt"
 
-	"github.com/AlekSi/gocovermerge/internal/test/package1"
+	"github.com/AlekSi/gocoverutil/internal/test/package1"
 )
 
 func FizzBuzz() {
