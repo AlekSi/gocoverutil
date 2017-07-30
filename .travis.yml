@@ -9,6 +9,9 @@ install:
   - go get ./...
   - go get github.com/mattn/goveralls
 
+script:
+  - make ci
+
 after_success:
   - bash <(curl -s https://codecov.io/bash) -X fix
   - goveralls -coverprofile=cover.out

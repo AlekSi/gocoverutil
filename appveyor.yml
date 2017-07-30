@@ -18,7 +18,7 @@ build_script:
   - mingw32-make install
 
 test_script:
-  - mingw32-make
+  - mingw32-make ci
 
 on_success:
   - goveralls -coverprofile=cover.out -service=
