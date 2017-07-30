@@ -18,7 +18,3 @@ test: install
 		github.com/AlekSi/gocoverutil/internal/test/...
 
 	go tool cover -html=cover.out -o cover.html
-
-ci: test
-	# make sure output not changed
-	git diff --exit-code
