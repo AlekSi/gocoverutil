@@ -6,8 +6,12 @@ import (
 	"github.com/AlekSi/gocoverutil/internal/test/package1"
 )
 
-func FizzBuzz() {
+func FizzBuzz(verbose bool) {
 	for i := 1; i <= 100; i++ {
+		if verbose {
+			fmt.Printf("%d: ", i)
+		}
+
 		m3 := (i % 3) == 0
 		m5 := (i % 5) == 0
 		switch {

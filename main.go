@@ -19,7 +19,7 @@ var (
 
 	testFlagSet = flag.NewFlagSet("test", flag.ExitOnError)
 
-	// The build flags are shared by the build, clean, get, install, list, run, and test commands:
+	// go build flags, in order of "go build -h"
 	aF    = testFlagSet.Bool("a", false, "force rebuilding of packages that are already up-to-date.")
 	nF    = testFlagSet.Bool("n", false, "print the commands but do not run them.")
 	raceF = testFlagSet.Bool("race", false, "enable data race detection.")
@@ -30,12 +30,14 @@ var (
 	// -p is not supported
 	// -v is redefined below
 
-	// The test binary flags:
+	// test binary flags (without "test." prefix), in order of "./gocoverutil-fizzbuzz.test -h"
+	shortF   = testFlagSet.Bool("short", false, "tell long-running tests to shorten their run time.")
+	timeoutF = testFlagSet.Duration("timeout", 0, "if a test runs longer than t, panic.")
+	vF       = testFlagSet.Bool("v", false, "verbose output: log all tests as they are run.")
+	// -coverprofile is defined by main command
+
+	// go test flags, excluding go build and test binary flags, in order of "go test -h"
 	covermodeF = testFlagSet.String("covermode", "", "set the mode for coverage analysis for the package[s] being tested.")
-	shortF     = testFlagSet.Bool("short", false, "tell long-running tests to shorten their run time.")
-	timeoutF   = testFlagSet.Duration("timeout", 0, "if a test runs longer than t, panic.")
-	vF         = testFlagSet.Bool("v", false, "verbose output: log all tests as they are run.")
-	// -coverprofile is defined by main comand
 	// -coverpkg is set by Test method
 
 	// TODO add more flags

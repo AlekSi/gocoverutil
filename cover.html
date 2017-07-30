@@ -58,7 +58,7 @@
 				
 				<option value="file1">github.com/AlekSi/gocoverutil/internal/test/package1/file2.go (100.0%)</option>
 				
-				<option value="file2">github.com/AlekSi/gocoverutil/internal/test/package2/file1.go (100.0%)</option>
+				<option value="file2">github.com/AlekSi/gocoverutil/internal/test/package2/file1.go (90.9%)</option>
 				
 				</select>
 			</div>
@@ -112,9 +112,13 @@ import (
         "github.com/AlekSi/gocoverutil/internal/test/package1"
 )
 
-func FizzBuzz() <span class="cov1" title="1">{
+func FizzBuzz(verbose bool) <span class="cov1" title="1">{
         for i := 1; i &lt;= 100; i++ </span><span class="cov10" title="100">{
-                m3 := (i % 3) == 0
+                if verbose </span><span class="cov0" title="0">{
+                        fmt.Printf("%d: ", i)
+                }</span>
+
+                <span class="cov10" title="100">m3 := (i % 3) == 0
                 m5 := (i % 5) == 0
                 switch </span>{
                 case m3 &amp;&amp; m5:<span class="cov4" title="6">

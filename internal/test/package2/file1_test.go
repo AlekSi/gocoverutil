@@ -1,7 +1,7 @@
 package package2
 
 func Example() {
-	FizzBuzz()
+	FizzBuzz(false)
 
 	// OUTPUT:
 	// 1
