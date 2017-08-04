@@ -15,6 +15,14 @@ import (
 	"golang.org/x/tools/cover"
 )
 
+type byLines []cover.ProfileBlock
+
+func (bl byLines) Len() int          { return len(bl) }
+func (bl byLines) Swap(i int, j int) { bl[i], bl[j] = bl[j], bl[i] }
+func (bl byLines) Less(i int, j int) bool {
+	return bl[i].StartLine < bl[j].StartLine || bl[i].StartLine == bl[j].StartLine && bl[i].StartCol < bl[j].StartCol
+}
+
 // Merge merges several coverage files into single file.
 func Merge(files []string, output string) error {
 	blocks := make(map[string][]cover.ProfileBlock)
@@ -44,11 +52,7 @@ func Merge(files []string, output string) error {
 	sort.Strings(files)
 
 	for _, file := range files {
-		// sort blocks
-		sort.Slice(blocks[file], func(i, j int) bool {
-			bi, bj := blocks[file][i], blocks[file][j]
-			return bi.StartLine < bj.StartLine || bi.StartLine == bj.StartLine && bi.StartCol < bj.StartCol
-		})
+		sort.Sort(byLines(blocks[file]))
 
 		// merge blocks
 		var newBlocks []cover.ProfileBlock
