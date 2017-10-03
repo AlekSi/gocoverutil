@@ -24,10 +24,12 @@ func (bl byLines) Less(i int, j int) bool {
 }
 
 // Merge merges several coverage files into single file.
-func Merge(files []string, output string) error {
+// All input files are fully read before output file is written,
+// so it may be one of the input files.
+func Merge(inputFiles []string, outputFile string) error {
 	blocks := make(map[string][]cover.ProfileBlock)
 	var mode string
-	for _, f := range files {
+	for _, f := range inputFiles {
 		profiles, err := cover.ParseProfiles(f)
 		if err != nil {
 			return err
@@ -45,13 +47,13 @@ func Merge(files []string, output string) error {
 	}
 
 	// sort files
-	files = make([]string, 0, len(blocks))
+	inputFiles = make([]string, 0, len(blocks))
 	for file := range blocks {
-		files = append(files, file)
+		inputFiles = append(inputFiles, file)
 	}
-	sort.Strings(files)
+	sort.Strings(inputFiles)
 
-	for _, file := range files {
+	for _, file := range inputFiles {
 		sort.Sort(byLines(blocks[file]))
 
 		// merge blocks
@@ -81,7 +83,7 @@ func Merge(files []string, output string) error {
 		blocks[file] = newBlocks
 	}
 
-	f, err := os.Create(output)
+	f, err := os.Create(outputFile)
 	if err != nil {
 		return err
 	}
@@ -90,7 +92,7 @@ func Merge(files []string, output string) error {
 	if _, err = f.WriteString(fmt.Sprintf("mode: %s\n", mode)); err != nil {
 		return err
 	}
-	for _, file := range files {
+	for _, file := range inputFiles {
 		for _, b := range blocks[file] {
 			// encoding/base64/base64.go:34.44,37.40 3 1
 			// where the fields are: name.go:line.column,line.column numberOfStatements count
@@ -126,7 +128,7 @@ func list(packages []string) ([]string, error) {
 
 // Test runs `go test -cover` with correct flags for all packages in flagSet, and merges coverage files.
 // Returned error may be *exec.ExitError if tests failed.
-func Test(flagSet *flag.FlagSet, output string, logger *log.Logger) error {
+func Test(flagSet *flag.FlagSet, outputFile string, logger *log.Logger) error {
 	packages, err := list(flagSet.Args())
 	if err != nil {
 		return err
@@ -180,7 +182,7 @@ func Test(flagSet *flag.FlagSet, output string, logger *log.Logger) error {
 	}
 
 	// merge and remove files
-	if err = Merge(files, output); err != nil {
+	if err = Merge(files, outputFile); err != nil {
 		return err
 	}
 	return os.RemoveAll(dir)
