@@ -22,12 +22,12 @@ var (
 	// go build flags, in order of "go build -h"
 	aF    = testFlagSet.Bool("a", false, "force rebuilding of packages that are already up-to-date.")
 	nF    = testFlagSet.Bool("n", false, "print the commands but do not run them.")
+	pF    = testFlagSet.Int("p", 1, "ignored for compatibility with go build")
 	raceF = testFlagSet.Bool("race", false, "enable data race detection.")
 	msanF = testFlagSet.Bool("msan", false, "enable interoperation with memory sanitizer.")
 	workF = testFlagSet.Bool("work", false, "print the name of the temporary work directory and do not delete it when exiting.")
 	xF    = testFlagSet.Bool("x", false, "print the commands.")
 	tagsF = testFlagSet.String("tags", "", "a list of build tags to consider satisfied during the build.")
-	// -p is not supported
 	// -v is redefined below
 
 	// test binary flags (without "test." prefix), in order of "./gocoverutil-fizzbuzz.test -h"
@@ -58,6 +58,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "%s test command runs go test -cover with correct flags and merges profiles.\n\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "Packages list is passed as arguments; they may contain `...` patterns.\n")
 		fmt.Fprintf(os.Stderr, "The list is expanded, sorted and duplicates are removed.\n")
+		fmt.Fprintf(os.Stderr, "Only a single package is passed at once to `go test`, so it always acts as if `-p 1` is passed.\n")
 		fmt.Fprintf(os.Stderr, "`go test -coverpkg` flag is set automatically to include all packages.\n")
 		fmt.Fprintf(os.Stderr, "If tests are failing, %s exits with a correct exit code.\n\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "Usage:\n\n")
