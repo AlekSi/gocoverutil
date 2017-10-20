@@ -12,7 +12,10 @@ test: install
 		go test -coverprofile=package2.out -covermode=count && \
 		gocoverutil -coverprofile=package2.out merge package2.out
 
-	gocoverutil -coverprofile=cover.out test -v -covermode=count \
+	gocoverutil test -v
+
+	gocoverutil -coverprofile=cover.out -ignore=github.com/AlekSi/gocoverutil/internal/test/ignored/... \
+		test -v -covermode=count \
 		github.com/AlekSi/gocoverutil/internal/test/package1 \
 		github.com/AlekSi/gocoverutil/internal/test/package2 \
 		github.com/AlekSi/gocoverutil/internal/test/...

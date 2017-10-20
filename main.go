@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 	"syscall"
 
 	"github.com/AlekSi/gocoverutil/gocoverutil"
@@ -14,6 +15,7 @@ import (
 
 var (
 	coverprofileF = flag.String("coverprofile", "cover.out", "Output file.")
+	ignoreF       = flag.String("ignore", "", "comma-separated list of packages to ignore; may contain '...' patterns")
 
 	mergeFlagSet = flag.NewFlagSet("merge", flag.ExitOnError)
 
@@ -57,9 +59,9 @@ func main() {
 	testFlagSet.Usage = func() {
 		fmt.Fprintf(os.Stderr, "%s test command runs go test -cover with correct flags and merges profiles.\n\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "Packages list is passed as arguments; they may contain `...` patterns.\n")
-		fmt.Fprintf(os.Stderr, "The list is expanded, sorted and duplicates are removed.\n")
+		fmt.Fprintf(os.Stderr, "The list is expanded, sorted and duplicates and ignored packages are removed.\n")
+		fmt.Fprintf(os.Stderr, "`go test -coverpkg` flag is set automatically to the same list.\n")
 		fmt.Fprintf(os.Stderr, "Only a single package is passed at once to `go test`, so it always acts as if `-p 1` is passed.\n")
-		fmt.Fprintf(os.Stderr, "`go test -coverpkg` flag is set automatically to include all packages.\n")
 		fmt.Fprintf(os.Stderr, "If tests are failing, %s exits with a correct exit code.\n\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "Usage:\n\n")
 		fmt.Fprintf(os.Stderr, "  %s [global flags] test [test flags] [packages]\n\n", os.Args[0])
@@ -91,7 +93,11 @@ func main() {
 		if *nF || *xF || *vF {
 			logger.SetOutput(os.Stderr)
 		}
-		err = gocoverutil.Test(testFlagSet, *coverprofileF, logger)
+		var ignore []string
+		if len(*ignoreF) > 0 {
+			ignore = strings.Split(*ignoreF, ",")
+		}
+		err = gocoverutil.Test(testFlagSet, ignore, *coverprofileF, logger)
 
 	default:
 		flag.Usage()

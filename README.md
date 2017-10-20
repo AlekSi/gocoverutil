@@ -23,8 +23,8 @@ gocoverutil -coverprofile=cover.out merge internal/test/package1/package1.out in
 
 Test command runs `go test -cover` with correct flags and merges profiles.
 Packages list is passed as arguments; they may contain `...` patterns.
-The list is expanded, sorted and duplicates are removed.
-`go test -coverpkg` flag is set automatically to include all packages.
+The list is expanded, sorted and duplicates and ignored packages are removed.
+`go test -coverpkg` flag is set automatically to the same list.
 Only a single package is passed at once to `go test`, so it always acts as if `-p 1` is passed.
 If tests are failing, gocoverutil exits with a correct exit code.
 Run `gocoverutil test -h` for usage information. Example:

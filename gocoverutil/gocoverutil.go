@@ -128,10 +128,36 @@ func list(packages []string) ([]string, error) {
 
 // Test runs `go test -cover` with correct flags for all packages in flagSet, and merges coverage files.
 // Returned error may be *exec.ExitError if tests failed.
-func Test(flagSet *flag.FlagSet, outputFile string, logger *log.Logger) error {
-	packages, err := list(flagSet.Args())
+func Test(flagSet *flag.FlagSet, ignore []string, outputFile string, logger *log.Logger) error {
+	args, err := list(flagSet.Args())
 	if err != nil {
 		return err
+	}
+	packages := args
+
+	// handle ignore slice only if it is really given to avoid expanding it with `go list` to the same package
+	if len(ignore) > 0 {
+		ignore, err = list(ignore)
+		if err != nil {
+			return err
+		}
+		packages = nil
+		for _, a := range args {
+			var skip bool
+			for _, i := range ignore {
+				if a == i {
+					skip = true
+					break
+				}
+			}
+			if !skip {
+				packages = append(packages, a)
+			}
+		}
+	}
+
+	if len(packages) == 0 {
+		return fmt.Errorf("nothing to test, all packages are ignored")
 	}
 
 	// copy flags from flagSet, add -coverpkg with all packages
