@@ -23,4 +23,4 @@ test_script:
 on_success:
   - goveralls -coverprofile=cover.out -service=
   - curl -s -o codecov https://codecov.io/bash
-  - bash codecov -X fix
+  - bash codecov -X fix -f cover.out

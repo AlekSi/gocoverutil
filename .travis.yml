@@ -17,5 +17,5 @@ script:
   - git diff --exit-code
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash) -X fix
   - goveralls -coverprofile=cover.out
+  - bash <(curl -s https://codecov.io/bash) -X fix -f cover.out
