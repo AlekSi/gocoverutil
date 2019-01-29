@@ -4,7 +4,6 @@
 [![Travis CI](https://travis-ci.org/AlekSi/gocoverutil.svg?branch=master)](https://travis-ci.org/AlekSi/gocoverutil)
 [![AppVeyor](https://ci.appveyor.com/api/projects/status/bxcbywwapyvsprju/branch/master?svg=true)](https://ci.appveyor.com/project/AlekSi/gocoverutil)
 [![Codecov](https://codecov.io/gh/AlekSi/gocoverutil/branch/master/graph/badge.svg)](https://codecov.io/gh/AlekSi/gocoverutil)
-[![Coveralls](https://coveralls.io/repos/github/AlekSi/gocoverutil/badge.svg?branch=master)](https://coveralls.io/github/AlekSi/gocoverutil)
 [![Go Report Card](https://goreportcard.com/badge/AlekSi/gocoverutil)](https://goreportcard.com/report/AlekSi/gocoverutil)
 
 
