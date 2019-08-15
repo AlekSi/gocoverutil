@@ -60,11 +60,6 @@ func Merge(inputFiles []string, outputFile string) error {
 		var newBlocks []cover.ProfileBlock
 		var prev cover.ProfileBlock
 		for _, b := range blocks[file] {
-			// skip full duplicate
-			if prev == b {
-				continue
-			}
-
 			// change count inside previous block if only count changed
 			prev.Count = b.Count
 			if prev == b {
